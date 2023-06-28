@@ -78,7 +78,7 @@ class MaxPool:
 
 class Lineal:
 
-    def __init__(self, x):
+    def __init__(self, input_size, output_size):
         self.weights = np.random.rand(output_size, input_size)
         self.biases = np.zeros((output_size, 1))
     
