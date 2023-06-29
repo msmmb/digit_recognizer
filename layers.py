@@ -46,13 +46,12 @@ class MaxPool:
         self.depth = depth
         self.factor = factor
 
-    def get_region(self, x):
+    def get_indexes(self, x):
         output_size = x.shape[1]//self.factor
         for i in range(x.shape[0]):
             for j in range(output_size):
                 for k in range(output_size):
-                    region = x[i, j*self.factor:(j+1)*self.factor, k*self.factor:(k+1)*self.factor]
-                    yield region, i, j, k
+                    yield i, j, k
     
     def forward(self, x):
         self.input = x
@@ -60,7 +59,8 @@ class MaxPool:
         self.max_indexes = np.zeros((self.depth, output_size, output_size, 3), dtype=int)
         y = np.zeros((self.depth, output_size, output_size), dtype=np.float128)
 
-        for region, i, j, k in self.get_region(x):
+        for i, j, k in self.get_indexes(x):
+            region = x[i, j*self.factor:(j+1)*self.factor, k*self.factor:(k+1)*self.factor]
             y[i, j, k] = np.amax(region)
             index = np.unravel_index(np.argmax(region), region.shape)
             self.max_indexes[i, j, k] = np.array([i, self.factor*j+index[0], self.factor*k+index[1]])
@@ -70,7 +70,7 @@ class MaxPool:
 
     def backward(self, dL_dY):
         dL_dX = np.zeros(self.input.shape)
-        for region, i, j, k in self.get_region(self.input):
+        for i, j, k in self.get_indexes(self.input):
             indexes = self.max_indexes[i, j, k]
             dL_dX[indexes[0], indexes[1], indexes[2]] = dL_dY[i, j, k]
         return dL_dX
@@ -84,7 +84,7 @@ class Lineal:
     
     def forward(self, x):
         self.input = x
-        y = np.dot(self.weights, self.input) + self.biases
+        y = np.dot(self.weights, self.input)+self.biases
         self.output = y
         return y
 
