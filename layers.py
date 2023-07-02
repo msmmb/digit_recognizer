@@ -5,8 +5,8 @@ class Convolutional:
 
     def __init__(self, kernel_size, depth, input_size):
         output_size = input_size-kernel_size+1
-        self.filters = np.random.rand(depth, kernel_size, kernel_size) 
-        self.biases = np.zeros((depth, output_size, output_size))
+        self.filters = np.random.rand(depth, kernel_size, kernel_size)-0.5 
+        self.biases = np.random.rand(depth, output_size, output_size)-0.5
         
     def get_region(self, x, kernel_size, output_size):
         for i in range(x.shape[0]):
@@ -17,7 +17,7 @@ class Convolutional:
     
     def conv(self, x, filters):
         output_size = x.shape[1]-filters.shape[1]+1
-        y = np.zeros((x.shape[0], output_size, output_size), dtype=np.float128)
+        y = np.zeros((x.shape[0], output_size, output_size), dtype=np.float32)
         for region, i, j, k in self.get_region(x, filters.shape[1], output_size):
             y[i, j, k] = np.sum(region*filters[i])
         return y
@@ -56,8 +56,8 @@ class MaxPool:
     def forward(self, x):
         self.input = x
         output_size = x.shape[1]//self.factor
-        self.max_indexes = np.zeros((self.depth, output_size, output_size, 3), dtype=int)
-        y = np.zeros((self.depth, output_size, output_size), dtype=np.float128)
+        self.max_indexes = np.zeros((self.depth, output_size, output_size, 3), dtype=np.uint8)
+        y = np.zeros((self.depth, output_size, output_size), dtype=np.float32)
 
         for i, j, k in self.get_indexes(x):
             region = x[i, j*self.factor:(j+1)*self.factor, k*self.factor:(k+1)*self.factor]
@@ -79,8 +79,8 @@ class MaxPool:
 class Lineal:
 
     def __init__(self, input_size, output_size):
-        self.weights = np.random.rand(output_size, input_size)
-        self.biases = np.zeros((output_size, 1))
+        self.weights = np.random.rand(output_size, input_size)-0.5
+        self.biases = np.random.rand(output_size, 1)-0.5
     
     def forward(self, x):
         self.input = x
