@@ -5,7 +5,7 @@ pip install -r requirements.txt
 ```
 
 ## Test model
-It tests a pre-trained model (90% accuracy)
+It tests a pre-trained model (92% accuracy)
 ```
 python3 test.py
 ```
