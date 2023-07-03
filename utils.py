@@ -41,20 +41,30 @@ def get_images():
 
 
 def save_model(nn):
-    nn.layer1.filters.tofile('model/layer1.npy')
-    nn.layer3.filters.tofile('model/layer3.npy')
-    nn.layer5.filters.tofile('model/layer5.npy')
-    nn.layer6.weights.tofile('model/layer6.npy')
-    nn.layer7.weights.tofile('model/layer7.npy')
+    nn.layer1.filters.tofile('model/layer1_filters.npy')
+    nn.layer1.biases.tofile('model/layer1_biases.npy')
+    nn.layer3.filters.tofile('model/layer3_filters.npy')
+    nn.layer3.biases.tofile('model/layer3_biases.npy')
+    nn.layer5.filters.tofile('model/layer5_filters.npy')
+    nn.layer5.biases.tofile('model/layer5_biases.npy')
+    nn.layer6.weights.tofile('model/layer6_weights.npy')
+    nn.layer6.biases.tofile('model/layer6_biases.npy')
+    nn.layer7.weights.tofile('model/layer7_weights.npy')
+    nn.layer7.biases.tofile('model/layer7_biases.npy')
 
 
 def load_model():
     nn = CNN()
-    nn.layer1.filters = np.reshape(np.fromfile('model/layer1.npy'), nn.layer1.filters.shape)
-    nn.layer3.filters = np.reshape(np.fromfile('model/layer3.npy'), nn.layer3.filters.shape)
-    nn.layer5.filters = np.reshape(np.fromfile('model/layer5.npy'), nn.layer5.filters.shape)
-    nn.layer6.weights = np.reshape(np.fromfile('model/layer6.npy'), nn.layer6.weights.shape)
-    nn.layer7.weights = np.reshape(np.fromfile('model/layer7.npy'), nn.layer7.weights.shape)
+    nn.layer1.filters = np.reshape(np.fromfile('model/layer1_filters.npy'), nn.layer1.filters.shape)
+    nn.layer1.biases = np.reshape(np.fromfile('model/layer1_biases.npy'), nn.layer1.biases.shape)
+    nn.layer3.filters = np.reshape(np.fromfile('model/layer3_filters.npy'), nn.layer3.filters.shape)
+    nn.layer3.biases = np.reshape(np.fromfile('model/layer3_biases.npy'), nn.layer3.biases.shape)
+    nn.layer5.filters = np.reshape(np.fromfile('model/layer5_filters.npy'), nn.layer5.filters.shape)
+    nn.layer5.biases = np.reshape(np.fromfile('model/layer5_biases.npy'), nn.layer5.biases.shape)
+    nn.layer6.weights = np.reshape(np.fromfile('model/layer6_weights.npy'), nn.layer6.weights.shape)
+    nn.layer6.biases = np.reshape(np.fromfile('model/layer6_biases.npy'), nn.layer6.biases.shape)
+    nn.layer7.weights = np.reshape(np.fromfile('model/layer7_weights.npy'), nn.layer7.weights.shape)
+    nn.layer7.biases = np.reshape(np.fromfile('model/layer7_biases.npy'), nn.layer7.biases.shape)
     return nn
 
 
@@ -75,9 +85,9 @@ def test_model(nn):
         print(f'Actual digit: {y_test[n]}')
 
         for i in range(10):
-            prob = f"{round(y_pred[i][0]*100, 2)}"
-            if prob != '0.0':
-                print(f'{i} -> {prob} %')
+            prob = f'{int(y_pred[i][0]*100)}'
+            if prob != '0':
+                print(f'{i} -> {prob}%')
                 
         print()
         plt.imshow(x_test[n])
